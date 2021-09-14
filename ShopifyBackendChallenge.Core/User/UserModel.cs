@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNet.Identity.EntityFramework;
+﻿using Microsoft.AspNetCore.Identity;
 using ShopifyBackendChallenge.Core.Image;
 using System;
 using System.Collections.Generic;
