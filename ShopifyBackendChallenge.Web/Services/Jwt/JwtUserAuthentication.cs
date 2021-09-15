@@ -37,9 +37,9 @@ namespace ShopifyBackendChallenge.Web.Services.Jwt
             return new AuthenticateResponse(token);
         }
 
-        public async Task<UserModel> GetById(int id)
+        public UserModel GetById(int id)
         {
-            return await _userData.GetUserById(id);
+            return _userData.GetUserById(id);
         }
 
         private string GenerateJwtToken(UserModel user)

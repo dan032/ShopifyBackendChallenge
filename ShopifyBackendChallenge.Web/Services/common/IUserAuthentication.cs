@@ -10,6 +10,6 @@ namespace ShopifyBackendChallenge.Web.Services.common
     public interface IUserAuthentication
     {
         Task<AuthenticateResponse> Authenticate(AuthenticateRequest model);
-        Task<UserModel> GetById(int id);
+        UserModel GetById(int id);
     }
 }

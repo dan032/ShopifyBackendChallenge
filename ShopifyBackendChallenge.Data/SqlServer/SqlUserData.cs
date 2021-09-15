@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ShopifyBackendChallenge.Data.Utils;
+using System.Linq;
 
 namespace ShopifyBackendChallenge.Data.SqlServer
 {
@@ -39,9 +40,9 @@ namespace ShopifyBackendChallenge.Data.SqlServer
             return await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<UserModel> GetUserById(int id)
+        public UserModel GetUserById(int id)
         {
-            return await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == id);
+            return _dbContext.Users.FirstOrDefault(u => u.Id == id);
         }
     }
 }

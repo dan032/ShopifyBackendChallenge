@@ -35,7 +35,7 @@ namespace ShopifyBackendChallenge.Web.Helpers
             await _next(context);
         }
 
-        private async void attachUserToContext(HttpContext context, IUserAuthentication userService, string token)
+        private void attachUserToContext(HttpContext context, IUserAuthentication userService, string token)
         {
             try
             {
@@ -52,7 +52,7 @@ namespace ShopifyBackendChallenge.Web.Helpers
 
                 JwtSecurityToken jwtSecurityToken = (JwtSecurityToken)validatedToken;
                 int userId = int.Parse(jwtSecurityToken.Claims.First(x => x.Type == "sub").Value);
-                context.Items["User"] = await userService.GetById(userId);
+                context.Items["User"] = userService.GetById(userId);
             }
             catch
             {

@@ -33,13 +33,5 @@ namespace ShopifyBackendChallenge.Web.Controllers
             }
             return Ok(response);
         }
-
-        [Authorize]
-        [HttpGet]
-        public IActionResult GetAll()
-        {
-            
-            return Ok(new { message = "YAY"});
-        }
     }
 }
