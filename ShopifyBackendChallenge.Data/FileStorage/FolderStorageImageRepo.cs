@@ -14,6 +14,11 @@ namespace ShopifyBackendChallenge.Data.FileStorage
             throw new NotImplementedException();
         }
 
+        public Task<int> CommitAsync()
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<IEnumerable<byte[]>> GetImagesByUserIdAsync(string userId)
         {
             throw new NotImplementedException();

@@ -11,6 +11,9 @@ using ShopifyBackendChallenge.Data.Common;
 using ShopifyBackendChallenge.Data.FileStorage;
 using ShopifyBackendChallenge.Data.SqlServer;
 using Microsoft.EntityFrameworkCore;
+using ShopifyBackendChallenge.Web.Helpers;
+using ShopifyBackendChallenge.Web.Services.common;
+using ShopifyBackendChallenge.Web.Services.Jwt;
 
 namespace ShopifyBackendChallenge.Web
 {
@@ -25,13 +28,15 @@ namespace ShopifyBackendChallenge.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
+            //services.AddCors();
             services.AddControllersWithViews();
-            services.AddDbContext<RepoDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddIdentity<UserModel, IdentityRole>()
-                .AddEntityFrameworkStores<RepoDbContext>();
 
+            services.AddDbContext<RepoDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
             services.AddScoped<IImageMetadata, SqlImageMetadata>();
             services.AddScoped<IImageRepo, FolderStorageImageRepo>();
+            services.AddScoped<IUserData, SqlUserData>();
+            services.AddScoped<IUserAuthentication, JwtUserAuthentication>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -42,14 +47,26 @@ namespace ShopifyBackendChallenge.Web
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseStaticFiles();
+            //using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            //{
+            //    var context = serviceScope.ServiceProvider.GetService<RepoDbContext>();
+            //    context.Database.Migrate();
+            //}
+
             app.UseRouting();
-            app.UseStatusCodePagesWithRedirects("/");
+
+            //app.UseCors(x => x
+            //    .AllowAnyOrigin()
+            //    .AllowAnyMethod()
+            //    .AllowAnyHeader());
+            app.UseMiddleware<JwtMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapDefaultControllerRoute();
             });
+
+            SeedData.EnsurePopulated(app);
         }
     }
 }

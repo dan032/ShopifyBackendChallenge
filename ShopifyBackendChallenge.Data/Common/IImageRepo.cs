@@ -11,5 +11,6 @@ namespace ShopifyBackendChallenge.Data.Common
         Task<string> AddImageAsync(IFormFile image, string userId);
         Task<IEnumerable<byte[]>> GetImagesByUserIdAsync(string userId);
         Task<List<int>> RemoveAllUserImagesAsync(string userId);
+        Task<int> CommitAsync();
     }
 }

@@ -1,0 +1,15 @@
+version: '3.4'
+
+services:
+  db:
+    image: "mcr.microsoft.com/mssql/server:2017-latest"
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=1Secure*Password1
+  shopifybackendchallenge.web:
+    image: ${DOCKER_REGISTRY-}shopifybackendchallengeweb
+    build:
+      context: .
+      dockerfile: ShopifyBackendChallenge.Web/Dockerfile
+    depends_on:
+      - db
