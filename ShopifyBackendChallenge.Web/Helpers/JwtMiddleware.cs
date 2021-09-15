@@ -51,7 +51,7 @@ namespace ShopifyBackendChallenge.Web.Helpers
                 }, out SecurityToken validatedToken);
 
                 JwtSecurityToken jwtSecurityToken = (JwtSecurityToken)validatedToken;
-                int userId = int.Parse(jwtSecurityToken.Claims.First(x => x.Type == "id").Value);
+                int userId = int.Parse(jwtSecurityToken.Claims.First(x => x.Type == "sub").Value);
                 context.Items["User"] = await userService.GetById(userId);
             }
             catch

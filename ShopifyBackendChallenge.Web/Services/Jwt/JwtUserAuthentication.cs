@@ -34,7 +34,7 @@ namespace ShopifyBackendChallenge.Web.Services.Jwt
             if (user == null) return null;
 
             string token = GenerateJwtToken(user);
-            return new AuthenticateResponse(user, token);
+            return new AuthenticateResponse(token);
         }
 
         public async Task<UserModel> GetById(int id)
@@ -48,8 +48,12 @@ namespace ShopifyBackendChallenge.Web.Services.Jwt
             byte[] key = Encoding.ASCII.GetBytes(_appSettings.Secret);
             SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[] { new Claim("id", user.Id.ToString()) }),
-                Expires = DateTime.Now.AddMinutes(30),
+                Subject = new ClaimsIdentity(new[] 
+                { 
+                    new Claim("sub", user.Id.ToString()),
+                    new Claim("username", user.Username)
+                }),
+                Expires = DateTime.Now.AddMinutes(5),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
