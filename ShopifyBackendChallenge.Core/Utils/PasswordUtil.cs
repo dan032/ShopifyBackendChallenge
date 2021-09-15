@@ -1,5 +1,4 @@
-﻿using ShopifyBackendChallenge.Core.User;
-using System;
+﻿using System;
 using System.Security.Cryptography;
 
 namespace ShopifyBackendChallenge.Core.Utils

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ShopifyBackendChallenge.Core.User
+namespace ShopifyBackendChallenge.Core.Utils
 {
     public class HashSalt
     {

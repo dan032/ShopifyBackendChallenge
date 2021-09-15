@@ -28,7 +28,7 @@ namespace ShopifyBackendChallenge.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddCors();
+            services.AddCors();
             services.AddControllers();
 
             services.AddDbContext<RepoDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
@@ -47,18 +47,12 @@ namespace ShopifyBackendChallenge.Web
                 app.UseDeveloperExceptionPage();
             }
 
-            //using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
-            //{
-            //    var context = serviceScope.ServiceProvider.GetService<RepoDbContext>();
-            //    context.Database.Migrate();
-            //}
-
             app.UseRouting();
 
-            //app.UseCors(x => x
-            //    .AllowAnyOrigin()
-            //    .AllowAnyMethod()
-            //    .AllowAnyHeader());
+            app.UseCors(x => x
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader());
             app.UseMiddleware<JwtMiddleware>();
 
             app.UseEndpoints(endpoints =>
