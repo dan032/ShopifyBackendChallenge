@@ -1,8 +1,14 @@
 ﻿using System;
 using System.Security.Cryptography;
 
-namespace ShopifyBackendChallenge.Core.Utils
+namespace ShopifyBackendChallenge.Data.Utils
 {
+    public class HashSalt
+    {
+        public string Hash { get; set; }
+        public string Salt { get; set; }
+    }
+
     public class PasswordUtil
     {
         public static HashSalt GenerateSaltedHash(string password)

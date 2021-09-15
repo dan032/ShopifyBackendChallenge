@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ShopifyBackendChallenge.Core.User;
-using ShopifyBackendChallenge.Core.Utils;
+using ShopifyBackendChallenge.Data.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;

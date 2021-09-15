@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using ShopifyBackendChallenge.Core.Utils;
+using ShopifyBackendChallenge.Data.Utils;
 
 namespace ShopifyBackendChallenge.Data.SqlServer
 {

@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using ShopifyBackendChallenge.Core.User;
-using ShopifyBackendChallenge.Core.Utils;
 using ShopifyBackendChallenge.Data.Common;
 using ShopifyBackendChallenge.Web.Helpers;
 using ShopifyBackendChallenge.Web.Models;
