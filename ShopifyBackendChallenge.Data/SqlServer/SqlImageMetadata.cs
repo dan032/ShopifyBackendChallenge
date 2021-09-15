@@ -9,9 +9,17 @@ namespace ShopifyBackendChallenge.Data.SqlServer
 {
     public class SqlImageMetadata : IImageMetadata
     {
-        public Task<ImageModel> AddImageAsync(ImageModel image)
+        private readonly RepoDbContext _context;
+
+        public SqlImageMetadata(RepoDbContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
+        }
+
+        public async Task<ImageModel> AddImageMetadataAsync(ImageModel image)
+        {
+            await _context.Images.AddAsync(image);
+            return image;
         }
 
         public Task<IEnumerable<int>> AddMultipleImagesMetadataAsync(IEnumerable<ImageModel> imageModels)
@@ -19,9 +27,9 @@ namespace ShopifyBackendChallenge.Data.SqlServer
             throw new NotImplementedException();
         }
 
-        public Task<int> CommitAsync()
+        public async Task<int> CommitAsync()
         {
-            throw new NotImplementedException();
+            return await _context.SaveChangesAsync();
         }
 
         public Task<IEnumerable<int>> DeleteImagesMetadataByUriAsync(IEnumerable<string> imageModels)

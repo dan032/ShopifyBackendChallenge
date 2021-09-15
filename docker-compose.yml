@@ -13,3 +13,7 @@ services:
       dockerfile: ShopifyBackendChallenge.Web/Dockerfile
     depends_on:
       - db
+    volumes:
+      - shopifyImages:/home/images
+volumes:
+  shopifyImages:

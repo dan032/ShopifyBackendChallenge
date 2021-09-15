@@ -10,7 +10,7 @@ namespace ShopifyBackendChallenge.Data.Common
     {
         Task<IEnumerable<ImageModel>> GetAllImageMetadataAsync();
         Task<IEnumerable<ImageModel>> GetImagesMetadataByUserIdAsync(string userId);
-        Task<ImageModel> AddImageAsync(ImageModel image);
+        Task<ImageModel> AddImageMetadataAsync(ImageModel image);
         Task<IEnumerable<int>> AddMultipleImagesMetadataAsync(IEnumerable<ImageModel> imageModels);
         Task<IEnumerable<int>> DeleteImagesMetadataByUriAsync(IEnumerable<string> imageModels);
         Task<int> CommitAsync();

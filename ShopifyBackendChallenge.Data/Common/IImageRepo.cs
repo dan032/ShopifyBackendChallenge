@@ -8,9 +8,9 @@ namespace ShopifyBackendChallenge.Data.Common
 {
     public interface IImageRepo
     {
-        Task<string> AddImageAsync(IFormFile image, string userId);
-        Task<IEnumerable<byte[]>> GetImagesByUserIdAsync(string userId);
-        Task<List<int>> RemoveAllUserImagesAsync(string userId);
+        Task<string> AddImageAsync(IFormFile image, int userId);
+        Task<IEnumerable<byte[]>> GetImagesByUserIdAsync(int userId);
+        Task<List<int>> RemoveAllUserImagesAsync(int userId);
         Task<int> CommitAsync();
     }
 }
