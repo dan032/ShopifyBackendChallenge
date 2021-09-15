@@ -29,7 +29,7 @@ namespace ShopifyBackendChallenge.Web
         public void ConfigureServices(IServiceCollection services)
         {
             //services.AddCors();
-            services.AddControllersWithViews();
+            services.AddControllers();
 
             services.AddDbContext<RepoDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
