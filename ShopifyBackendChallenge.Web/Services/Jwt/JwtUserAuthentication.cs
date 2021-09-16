@@ -53,7 +53,7 @@ namespace ShopifyBackendChallenge.Web.Services.Jwt
                     new Claim("sub", user.Id.ToString()),
                     new Claim("username", user.Username)
                 }),
-                Expires = DateTime.Now.AddMinutes(5),
+                Expires = DateTime.UtcNow.AddMinutes(5),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
