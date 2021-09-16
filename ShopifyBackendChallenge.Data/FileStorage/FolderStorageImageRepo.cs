@@ -35,12 +35,21 @@ namespace ShopifyBackendChallenge.Data.FileStorage
 
         public Task<int> CommitAsync()
         {
-            throw new NotImplementedException();
+            return null;
         }
 
-        public Task<IEnumerable<byte[]>> GetImagesByUserIdAsync(int userId)
+        public List<byte[]> GetImagesByUserIdAsync(int userId)
         {
-            throw new NotImplementedException();
+            string pathDirectory = Path.Combine(rootFolder, userId.ToString());
+
+            List<byte[]> files = new List<byte[]>();
+
+            foreach (string file in Directory.GetFiles(pathDirectory))
+            {
+                files.Add(File.ReadAllBytes(file));
+            }
+
+            return files;
         }
 
         public Task<List<int>> RemoveAllUserImagesAsync(int userId)

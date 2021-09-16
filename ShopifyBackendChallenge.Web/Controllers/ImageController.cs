@@ -63,5 +63,18 @@ namespace ShopifyBackendChallenge.Web.Controllers
             var images = await _imageMetadata.GetImagesMetadataByUserIdAsync(userId);
             return Ok(new {result = images });
         }
+
+        /// <summary>
+        /// Retrieves all images for the user
+        /// </summary>
+        /// <response code="401">User did not provide a valid JWT token</response>
+        [Authorize]
+        [HttpGet]
+        public IActionResult GetAllUserImages()
+        {
+            int userId = ((UserModel)HttpContext.Items["User"]).Id;
+            var images = _imageRepo.GetImagesByUserIdAsync(userId);
+            return Ok(new { result = images });
+        }
     }
 }
