@@ -1,7 +1,9 @@
-﻿using ShopifyBackendChallenge.Core.Image;
+﻿using Microsoft.EntityFrameworkCore;
+using ShopifyBackendChallenge.Core.Image;
 using ShopifyBackendChallenge.Data.Common;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -42,9 +44,9 @@ namespace ShopifyBackendChallenge.Data.SqlServer
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<ImageModel>> GetImagesMetadataByUserIdAsync(string userId)
+        public async Task<IEnumerable<ImageModel>> GetImagesMetadataByUserIdAsync(int userId)
         {
-            throw new NotImplementedException();
+            return await _context.Images.Where(i => i.UserId == userId).ToListAsync();
         }
     }
 }

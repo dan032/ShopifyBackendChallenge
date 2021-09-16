@@ -13,12 +13,12 @@ namespace ShopifyBackendChallenge.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ImageController : ControllerBase
+    public class ImagesController : ControllerBase
     {
         private readonly IImageRepo _imageRepo;
         private readonly IImageMetadata _imageMetadata;
 
-        public ImageController(IImageRepo imageRepo, IImageMetadata imageMetadata)
+        public ImagesController(IImageRepo imageRepo, IImageMetadata imageMetadata)
         {
             _imageRepo = imageRepo;
             _imageMetadata = imageMetadata;
@@ -28,17 +28,27 @@ namespace ShopifyBackendChallenge.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> PostImage([FromForm] SingleImageModel model)
         {
-            UserModel user = (UserModel)HttpContext.Items["User"];
-            string imagePath =  await _imageRepo.AddImageAsync(model.Image, user.Id);
+            int userId = ((UserModel)HttpContext.Items["User"]).Id;
+            string imagePath =  await _imageRepo.AddImageAsync(model.Image, userId);
             ImageModel imageMetadata = new ImageModel
             {
                 Title = model.Title,
                 Description = model.Description,
-                ImageUri = imagePath
+                ImageUri = imagePath,
+                UserId = userId
             };
             await _imageMetadata.AddImageMetadataAsync(imageMetadata);
             await _imageMetadata.CommitAsync();
             return Ok(new { message = "Image Added Successfully" });
+        }
+
+        [Authorize]
+        [HttpGet("metadata")]
+        public async Task<IActionResult> GetAllUserImageMetadata()
+        {
+            int userId = ((UserModel)HttpContext.Items["User"]).Id;
+            var images = await _imageMetadata.GetImagesMetadataByUserIdAsync(userId);
+            return Ok(new {result = images });
         }
     }
 }
