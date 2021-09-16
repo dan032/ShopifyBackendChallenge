@@ -8,7 +8,7 @@ namespace ShopifyBackendChallenge.Data.Common
 {
     public interface IUserData
     {
-        Task<UserModel> AddUserAsync(UserModel user);
+        Task<UserModel> AddUserAsync(string username, string password);
         Task<UserModel> GetUserByUsernameAndPasswordAsync(string username, string password);
         UserModel GetUserById(int id);
         Task<int> CommitAsync();

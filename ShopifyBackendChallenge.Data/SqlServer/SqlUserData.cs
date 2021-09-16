@@ -18,8 +18,16 @@ namespace ShopifyBackendChallenge.Data.SqlServer
             _dbContext = context;
         }
 
-        public async Task<UserModel> AddUserAsync(UserModel user)
+        public async Task<UserModel> AddUserAsync(string username, string password)
         {
+            HashSalt hashSalt = PasswordUtil.GenerateSaltedHash(password);
+            UserModel user = new UserModel
+            {
+                Username = username,
+                Hash = hashSalt.Hash,
+                Salt = hashSalt.Salt
+            };
+
             await _dbContext.Users.AddAsync(user);
             return user;
         }
@@ -32,7 +40,6 @@ namespace ShopifyBackendChallenge.Data.SqlServer
                 return user;
             }
             return null ;
-
         }
 
         public async Task<int> CommitAsync()
