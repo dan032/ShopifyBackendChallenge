@@ -25,6 +25,12 @@ namespace ShopifyBackendChallenge.Web.Controllers
             _userData = userData;
         }
 
+        /// <summary>
+        /// Provides the user with their JWT token when they provide valid credentials
+        /// </summary>
+        /// <param name="model"></param>
+        /// <response code="200">Provides the user with their JWT token</response>
+        /// <response code="400">User provided invalid credentials</response>
         [HttpPost("authenticate")]
         public async Task<IActionResult> Authenticate(AuthenticateRequest model)
         {
@@ -41,6 +47,11 @@ namespace ShopifyBackendChallenge.Web.Controllers
 
         }
 
+        /// <summary>
+        /// Allows the user to register for the repository
+        /// </summary>
+        /// <param name="model"></param>
+        /// <response code="400">User provided invalid credentials</response>
         [HttpPost("register")]
         public async Task<IActionResult> Register(AuthenticateRequest model)
         {

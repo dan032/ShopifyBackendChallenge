@@ -14,6 +14,9 @@ using Microsoft.EntityFrameworkCore;
 using ShopifyBackendChallenge.Web.Helpers;
 using ShopifyBackendChallenge.Web.Services.common;
 using ShopifyBackendChallenge.Web.Services.Jwt;
+using System.Reflection;
+using System.IO;
+using System;
 
 namespace ShopifyBackendChallenge.Web
 {
@@ -37,6 +40,13 @@ namespace ShopifyBackendChallenge.Web
             services.AddScoped<IImageRepo, FolderStorageImageRepo>();
             services.AddScoped<IUserData, SqlUserData>();
             services.AddScoped<IUserAuthentication, JwtUserAuthentication>();
+
+            services.AddSwaggerGen(c => {
+                // Set the comments path for the Swagger JSON and UI.
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,6 +56,14 @@ namespace ShopifyBackendChallenge.Web
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                c.RoutePrefix = string.Empty;
+            });
 
             app.UseRouting();
 

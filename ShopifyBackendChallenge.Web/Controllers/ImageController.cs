@@ -24,24 +24,37 @@ namespace ShopifyBackendChallenge.Web.Controllers
             _imageMetadata = imageMetadata;
         }
 
-        [Authorize]
+        /// <summary>
+        /// Adds an image to the user's repository
+        /// </summary>
+        /// <response code="400">User provided an invalid request</response>
+        /// <response code="401">User did not provide a valid JWT token</response>
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> PostImage([FromForm] SingleImageModel model)
         {
-            int userId = ((UserModel)HttpContext.Items["User"]).Id;
-            string imagePath =  await _imageRepo.AddImageAsync(model.Image, userId);
-            ImageModel imageMetadata = new ImageModel
+            if (ModelState.IsValid)
             {
-                Title = model.Title,
-                Description = model.Description,
-                ImageUri = imagePath,
-                UserId = userId
-            };
-            await _imageMetadata.AddImageMetadataAsync(imageMetadata);
-            await _imageMetadata.CommitAsync();
-            return Ok(new { message = "Image Added Successfully" });
+                int userId = ((UserModel)HttpContext.Items["User"]).Id;
+                string imagePath = await _imageRepo.AddImageAsync(model.Image, userId);
+                ImageModel imageMetadata = new ImageModel
+                {
+                    Title = model.Title,
+                    Description = model.Description,
+                    ImageUri = imagePath,
+                    UserId = userId
+                };
+                await _imageMetadata.AddImageMetadataAsync(imageMetadata);
+                await _imageMetadata.CommitAsync();
+                return Ok(new { message = "Image Added Successfully" });
+            }
+            return BadRequest(new { message = "Invalid Request" });
         }
 
+        /// <summary>
+        /// Retrieves all image metadata for the user
+        /// </summary>
+        /// <response code="401">User did not provide a valid JWT token</response>
         [Authorize]
         [HttpGet("metadata")]
         public async Task<IActionResult> GetAllUserImageMetadata()
