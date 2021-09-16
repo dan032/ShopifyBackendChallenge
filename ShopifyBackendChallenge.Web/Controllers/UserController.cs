@@ -46,11 +46,14 @@ namespace ShopifyBackendChallenge.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _userData.AddUserAsync(model.Username, model.Password);
-                await _userData.CommitAsync();
-                return Ok(new { message = "Registration Successful" });
+                UserModel user = await _userData.AddUserAsync(model.Username, model.Password);
+                if (user != null)
+                {
+                    await _userData.CommitAsync();
+                    return Ok(new { message = "Registration Successful" });
+                }
             }
-            return BadRequest(new { message = "Please provide a valid username and password" });
+            return BadRequest(new { message = "Invalid registration request" });
         }
     }
 }

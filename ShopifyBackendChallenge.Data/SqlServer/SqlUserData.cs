@@ -21,21 +21,27 @@ namespace ShopifyBackendChallenge.Data.SqlServer
         public async Task<UserModel> AddUserAsync(string username, string password)
         {
             HashSalt hashSalt = PasswordUtil.GenerateSaltedHash(password);
-            UserModel user = new UserModel
+            UserModel existingUser = await _dbContext.Users.FirstOrDefaultAsync(u => u.Username == username);
+            
+            if (existingUser == null)
             {
-                Username = username,
-                Hash = hashSalt.Hash,
-                Salt = hashSalt.Salt
-            };
+                UserModel user = new UserModel
+                {
+                    Username = username,
+                    Hash = hashSalt.Hash,
+                    Salt = hashSalt.Salt
+                };
 
-            await _dbContext.Users.AddAsync(user);
-            return user;
+                await _dbContext.Users.AddAsync(user);
+                return user;
+            }
+            return null;
         }
 
         public async Task<UserModel> GetUserByUsernameAndPasswordAsync(string username, string password)
         {
             var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Username == username);
-            if (PasswordUtil.VerifyPassword(password, user.Hash, user.Salt))
+            if (user != null && PasswordUtil.VerifyPassword(password, user.Hash, user.Salt))
             {
                 return user;
             }
