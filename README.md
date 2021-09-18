@@ -48,7 +48,7 @@ Seeing as I found out about this challenge within a week of the due date, I didn
 1) JWT Improvements: Currently I am not using a refresh token for when the JWT expires so that is one area where I can improve my authorization on the API. Another would be isolate 
 authentication into its own service, where only the authentication service would be allowed to generate new tokens. The tokens would then be encrypyed using RSA,
 where the authentication service would use a private key to encrypt the tokens and any other services would be able to use the public key to verify that the token
-did come from the authentication service. This not only ensures that only the authentication service can generate new tokens, but it reduces the liklihood of the private key
+came from the authentication service. This not only ensures that only the authentication service can generate new tokens, but it reduces the liklihood of the private key
 being compromised as only 1 service has access to it.
 
 2) I want to implement pagination for when the user is accessing their images. If the user is storing 100s of images then it would be prohibitevely expensive for the server to 
