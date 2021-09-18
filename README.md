@@ -19,7 +19,7 @@ the image metadata. I then used a Docker Volume's filesystem in order to store t
 
 # Getting Started
 
-1) Ensure that you have Docker and Docker Compose installed
+1) Ensure that you have Docker and Docker Compose installed, and that you are using Linux containers
 2) From the ShopifyBackendChallenge directory run "docker-compose build", and then "docker-compose up". This will ensure that the web server, database and docker volume are set up and ready to use.
 
 # How to use
