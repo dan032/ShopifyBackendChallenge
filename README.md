@@ -31,7 +31,7 @@ the image metadata. I then used a Docker Volume's filesystem in order to store t
 
 # Testing
 
-To run tests you will need to have dotnet core installed. From the ShopifyBackendChallenge directory run "dotnet test ShopifyBackendChallenge.Tests".
+To run tests you will need to be on a Windows machine and have dotnet core and sql server installed. From the ShopifyBackendChallenge directory run "dotnet test ShopifyBackendChallenge.Tests".
 
 # API Details
 
