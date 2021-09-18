@@ -21,6 +21,7 @@ namespace ShopifyBackendChallenge.Data.SqlServer
         public async Task<ImageModel> AddImageMetadataAsync(ImageModel image)
         {
             await _context.Images.AddAsync(image);
+          
             return image;
         }
 
@@ -42,6 +43,11 @@ namespace ShopifyBackendChallenge.Data.SqlServer
         public Task<IEnumerable<ImageModel>> GetAllImageMetadataAsync()
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<IEnumerable<ImageModel>> GetImageMetadataByTagsAsync(string tag, int userId)
+        {
+            return await _context.Images.Where(i => i.Tags.Contains(tag) && (i.UserId == userId || i.Private == false)).ToListAsync();
         }
 
         public async Task<IEnumerable<ImageModel>> GetImagesMetadataByUserIdAsync(int userId)

@@ -29,5 +29,11 @@ namespace ShopifyBackendChallenge.Core.Image
         [JsonIgnore]
         [Required]
         public int UserId { get; set; }
+
+        [Required]
+        public string Tags { get; set; }
+
+        [Required]
+        public bool Private { get; set; }
     }
 }

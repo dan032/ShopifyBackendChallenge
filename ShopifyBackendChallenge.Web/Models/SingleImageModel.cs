@@ -11,5 +11,6 @@ namespace ShopifyBackendChallenge.Web.Models
         public IFormFile Image { get; set; }
         public String Title { get; set; }
         public String Description { get; set; }
+        public IEnumerable<string> Tags { get; set; }
     }
 }

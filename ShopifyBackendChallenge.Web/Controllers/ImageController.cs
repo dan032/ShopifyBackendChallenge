@@ -42,8 +42,10 @@ namespace ShopifyBackendChallenge.Web.Controllers
                     Title = model.Title,
                     Description = model.Description,
                     ImageUri = imagePath,
-                    UserId = userId
+                    UserId = userId,
+                    Tags = String.Join(",", model.Tags)
                 };
+
                 await _imageMetadata.AddImageMetadataAsync(imageMetadata);
                 await _imageMetadata.CommitAsync();
                 return Ok(new { message = "Image Added Successfully" });
@@ -56,12 +58,26 @@ namespace ShopifyBackendChallenge.Web.Controllers
         /// </summary>
         /// <response code="401">User did not provide a valid JWT token</response>
         [Authorize]
-        [HttpGet("metadata")]
+        [HttpGet("personal-metadata")]
         public async Task<IActionResult> GetAllUserImageMetadata()
         {
             int userId = ((UserModel)HttpContext.Items["User"]).Id;
-            var images = await _imageMetadata.GetImagesMetadataByUserIdAsync(userId);
-            return Ok(new {result = images });
+            var metadata = await _imageMetadata.GetImagesMetadataByUserIdAsync(userId);
+            return Ok(new {result = metadata });
+        }
+
+        /// <summary>
+        /// Retrieves all image metadata for the user
+        /// </summary>
+        /// <response code="401">User did not provide a valid JWT token</response>
+        [Authorize]
+        [HttpGet]
+        [Route("search-global-metadata")]
+        public async Task<IActionResult> GetAllUserImageMetadataContainingTag([FromQuery] string tag)
+        {
+            int userId = ((UserModel)HttpContext.Items["User"]).Id;
+            var metadata = await _imageMetadata.GetImageMetadataByTagsAsync(tag, userId);
+            return Ok(new { result = metadata });
         }
 
         /// <summary>
