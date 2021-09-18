@@ -3,7 +3,7 @@
 This project was done for the Shopify Backend Challenge (2021) - https://docs.google.com/document/d/1eg3sJTOwtyFhDopKedRD6142CFkDfWp1QvRKXNTPIOc/edit
 
 When I started this project, I began with the goal to become more familiar with two specific technologies: Docker, and JWT (JSON Web Tokens). Specifically, 
-I wanted to ensure that this project was capable of running on anyone who wanted to run it, as long as they had Docker installed (with the caveat that they are using Linux containers).
+I wanted to ensure that this project was capable of running on anyone's machine, as long as they had Docker installed (with the caveat that they are using Linux containers).
 I wanted to learn more about JWT web tokens simply due to the fact that I've always just used cookies and wanted to try something different!
 
 Here is a basic deployment of my project:
