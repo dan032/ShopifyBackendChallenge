@@ -15,8 +15,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ShopifyBackendChallenge.Web\ShopifyBackendChallenge.Core\ShopifyBackendChallenge.Core.csproj" />
-    <ProjectReference Include="..\ShopifyBackendChallenge.Web\ShopifyBackendChallenge.Web\ShopifyBackendChallenge.Web.csproj" />
+    <ProjectReference Include="..\ShopifyBackendChallenge.Core\ShopifyBackendChallenge.Core.csproj" />
+    <ProjectReference Include="..\ShopifyBackendChallenge.Data\ShopifyBackendChallenge.Data.csproj" />
+    <ProjectReference Include="..\ShopifyBackendChallenge.Web\ShopifyBackendChallenge.Web.csproj" />
   </ItemGroup>
 
 </Project>

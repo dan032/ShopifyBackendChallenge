@@ -57,7 +57,8 @@ namespace ShopifyBackendChallenge.Tests.Image
                     {
                         Image = formData,
                         Description = "Test",
-                        Title = "Test"
+                        Title = "Test",
+                        Tags = new List<string>() { "Dan"}
                     };
                     controller.ControllerContext.HttpContext = new DefaultHttpContext();
                     controller.HttpContext.Items["User"] = new UserModel
