@@ -15,5 +15,7 @@ services:
       - db
     volumes:
       - shopifyImages:/home/images
+    ports:
+      - "8080:80"
 volumes:
   shopifyImages:
