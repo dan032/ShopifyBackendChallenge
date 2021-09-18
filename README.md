@@ -17,6 +17,9 @@ the image metadata. I then used a Docker Volume's filesystem in order to store t
 2) Request their images or their image metadata
 3) Search for public images through the use of a tag
 
+Users can specify whether or not their images are public, and if they are private then only they will be able to access them. The JWT contains the user id which will be used to
+determine if the user is authorized to view those images.
+
 # Getting Started
 
 1) Ensure that you have Docker and Docker Compose installed, and that you are using Linux containers
