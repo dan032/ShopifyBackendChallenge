@@ -6,6 +6,8 @@ services:
     environment:
       - ACCEPT_EULA=Y
       - SA_PASSWORD=1Secure*Password1
+    ports:
+      - "11433:1433"
   shopifybackendchallenge.web:
     image: ${DOCKER_REGISTRY-}shopifybackendchallengeweb
     build:
@@ -17,5 +19,6 @@ services:
       - shopifyImages:/home/images
     ports:
       - "8080:80"
+      - "8081:443"
 volumes:
   shopifyImages:
