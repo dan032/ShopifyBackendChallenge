@@ -20,6 +20,9 @@ the image metadata. I then used a Docker Volume's filesystem in order to store t
 Users can specify whether or not their images are public, and if they are private then only they will be able to access them. The JWT contains the user id which will be used to
 determine if the user is authorized to view those images.
 
+One thing to note about registration: the user's password is not stored in the database. A generated hash and salt are stored instead, and when the user tries to request a JWT, 
+the password they provide is used to generate a new hash which is compared against the one stored in the database.
+
 # Getting Started
 
 1) Ensure that you have Docker and Docker Compose installed, and that you are using Linux containers
