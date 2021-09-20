@@ -20,7 +20,8 @@ RUN dotnet test "ShopifyBackendChallenge.Tests.csproj"
 WORKDIR "/src/ShopifyBackendChallenge.Web"
 RUN dotnet build "ShopifyBackendChallenge.Web.csproj" -c Release -o /app/build
 
-
+RUN dotnet dev-certs https --clean
+RUN dotnet dev-certs https --trust
 
 FROM build AS publish
 RUN dotnet publish "ShopifyBackendChallenge.Web.csproj" -c Release -o /app/publish
