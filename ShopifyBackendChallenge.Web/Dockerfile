@@ -1,22 +1,26 @@
 #See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-FROM mcr.microsoft.com/dotnet/aspnet:3.1 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS base
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-FROM mcr.microsoft.com/dotnet/sdk:3.1 AS build
+FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /src
 COPY ["ShopifyBackendChallenge.Web/ShopifyBackendChallenge.Web.csproj", "ShopifyBackendChallenge.Web/"]
 RUN dotnet restore "ShopifyBackendChallenge.Web/ShopifyBackendChallenge.Web.csproj"
 
-COPY ["ShopifyBackendChallenge.Web/ShopifyBackendChallenge.Tests.csproj", "ShopifyBackendChallenge.Tests/"]
-RUN dotnet restore "ShopifyBackendChallenge.Web/ShopifyBackendChallenge.Tests.csproj"
+COPY ["ShopifyBackendChallenge.Tests/ShopifyBackendChallenge.Tests.csproj", "ShopifyBackendChallenge.Tests/"]
+RUN dotnet restore "ShopifyBackendChallenge.Tests/ShopifyBackendChallenge.Tests.csproj"
+
 COPY . .
+WORKDIR "/src/ShopifyBackendChallenge.Tests"
+RUN dotnet test "ShopifyBackendChallenge.Tests.csproj"
+
 WORKDIR "/src/ShopifyBackendChallenge.Web"
 RUN dotnet build "ShopifyBackendChallenge.Web.csproj" -c Release -o /app/build
 
-RUN dotnet test tests/ShopifyBackendChallenge.Test/ShopifyBackendChallenge.Test.csproj
+
 
 FROM build AS publish
 RUN dotnet publish "ShopifyBackendChallenge.Web.csproj" -c Release -o /app/publish

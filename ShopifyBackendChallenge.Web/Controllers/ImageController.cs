@@ -41,10 +41,21 @@ namespace ShopifyBackendChallenge.Web.Controllers
                 ImageModel imageModel = _mapper.Map<ImageModel>(dto);
                 string imagePath = await _imageRepo.AddImageAsync(imageModel);
 
+                if (imagePath == null)
+                {
+                    return BadRequest(new { message = "Invalid Request" });
+                }
+
                 var metadataModel = _mapper.Map<MetadataModel>(dto);
                 metadataModel.ImageUri = imagePath;
 
-                await _imageMetadata.AddImageMetadataAsync(metadataModel);
+                MetadataModel metadata = await _imageMetadata.AddImageMetadataAsync(metadataModel);
+
+                if (metadata == null)
+                {
+                    return BadRequest(new { message = "Invalid Request" });
+                }
+
                 await _imageMetadata.CommitAsync();
                 return Ok(new { message = "Image Added Successfully" });
             }
