@@ -1,10 +1,4 @@
-﻿using ShopifyBackendChallenge.Core.User;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace ShopifyBackendChallenge.Web.Models
+﻿namespace ShopifyBackendChallenge.Web.Models
 {
     public class AuthenticateResponse
     {

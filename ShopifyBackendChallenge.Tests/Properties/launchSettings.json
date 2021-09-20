@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "ShopifyBackendChallenge.Tests": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}

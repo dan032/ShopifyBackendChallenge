@@ -1,79 +1,125 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using ShopifyBackendChallenge.Core.User;
-using ShopifyBackendChallenge.Data;
-using ShopifyBackendChallenge.Data.Common;
-using ShopifyBackendChallenge.Data.FileStorage;
-using ShopifyBackendChallenge.Data.SqlServer;
-using ShopifyBackendChallenge.Data.Utils;
-using ShopifyBackendChallenge.Tests.Utils;
+using ShopifyBackendChallenge.Web.Data.Common;
+using ShopifyBackendChallenge.Web.Data.FileStorage;
+using ShopifyBackendChallenge.Web.Data.SqlServer;
 using ShopifyBackendChallenge.Web.Controllers;
 using ShopifyBackendChallenge.Web.Helpers;
-using ShopifyBackendChallenge.Web.Models;
-using ShopifyBackendChallenge.Web.Services.common;
-using ShopifyBackendChallenge.Web.Services.Jwt;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
+using AutoMapper;
+using ShopifyBackendChallenge.Web.Profiles;
+using ShopifyBackendChallenge.Web.Dtos;
+using Moq;
+using ShopifyBackendChallenge.Web.Models;
+using ShopifyBackendChallenge.Web.Utils;
+using System;
 
 namespace ShopifyBackendChallenge.Tests.Image
 {
-    public class ImageControllerTests : IClassFixture<SharedDatabaseFixture>
+    public class ImageControllerTests
     {
-        public ImageControllerTests(SharedDatabaseFixture fixture) => Fixture = fixture;
-
-        public SharedDatabaseFixture Fixture { get; }
-
         [Fact]
         public async void ImageController_UploadImage_Successful()
         {
-            using (var transaction = Fixture.Connection.BeginTransaction())
+            var appSettings = Options.Create(new AppSettings
             {
-                using (var context = Fixture.CreateContext(transaction))
-                {
-                    IUserData userData = new SqlUserData(context);
-                    var appSettings = Options.Create(new AppSettings
-                    {
-                        Secret = "Daasdfsadadssadadsasddasasfdffsadn"
-                    });
+                Secret = "Daasdfsadadssadadsasddasasfdffsadn"
+            });
 
-                    IImageMetadata imageMetadata = new SqlImageMetadata(context);
-                    IImageRepo imageRepo = new FolderStorageImageRepo();
-                    var controller = new ImagesController(imageRepo, imageMetadata);
+            HashSalt hashSalt = PasswordUtil.GenerateSaltedHash("test");
+            var fakeUser = new UserModel
+            {
+                Id = 1,
+                Username = "test",
+                Hash = hashSalt.Hash,
+                Salt = hashSalt.Salt
+            };
 
-                    var image = File.OpenRead(@"..\..\..\TestImages\test.jpg");
+            //Setup mock file using a memory stream
+            var content = "Hello World from a Fake Image";
+            var fileName = "test.jpg";
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.Write(content);
+            writer.Flush();
+            stream.Position = 0;
 
-                    var formData = new FormFile(image, 0, 0, "test", "test.jpg");
+            //create FormFile with desired data
+            IFormFile formData = new FormFile(stream, 0, stream.Length, "id_from_form", fileName);
 
 
-                    SingleImageModel singleImageModel = new SingleImageModel
-                    {
-                        Image = formData,
-                        Description = "Test",
-                        Title = "Test",
-                        Tags = new List<string>() { "Dan"}
-                    };
-                    controller.ControllerContext.HttpContext = new DefaultHttpContext();
-                    controller.HttpContext.Items["User"] = new UserModel
-                    {
-                        Id = 1,
-                        Username = "test",
-                        Hash = "hash",
-                        Salt = "salt"
-                    };
+            ImageCreateDto dto = new ImageCreateDto
+            {
+                ImageData = formData,
+                Description = "Test",
+                Title = "Test",
+                Tags = new List<string>() { "Dan" },
+                Private = false
+            };
 
-                    IActionResult actionResult = await controller.PostImage(singleImageModel);
-                    var okResult = actionResult as OkObjectResult;
-                    Assert.Equal(200, okResult.StatusCode);
-                }
-            }
+            var mockUserData = new Mock<IUserData>();
+            mockUserData.Setup(r => r.GetUser(It.IsAny<string>(), It.IsAny<UserModel>())).ReturnsAsync(GetTestUser());
+
+            var mockMapper = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new ImagesProfile());
+                cfg.AddProfile(new MetadataProfile());
+                cfg.AddProfile(new UsersProfile());
+            });
+
+            IMapper mapper = mockMapper.CreateMapper();
+
+            var fakeImageRepo = new Mock<IImageRepo>();
+            fakeImageRepo.Setup(r => r.AddImageAsync(It.IsAny<ImageModel>())).ReturnsAsync(GetTestImageUri());
+
+            var mockMetaData = new Mock<IImageMetadata>();
+            mockMetaData.Setup(r => r.AddImageMetadataAsync(It.IsAny<MetadataModel>())).ReturnsAsync(GetFakeMetaData(mapper, dto));
+
+
+            var controller = new ImagesController(fakeImageRepo.Object, mockMetaData.Object, mapper);
+
+            UserReadDto userReadDto = mapper.Map<UserReadDto>(fakeUser);
+
+            controller.ControllerContext.HttpContext = new DefaultHttpContext();
+            controller.HttpContext.Items["User"] = userReadDto;
+
+            IActionResult actionResult = await controller.PostImage(dto);
+            var okResult = actionResult as OkObjectResult;
+            Assert.Equal(200, okResult.StatusCode);
+
+        }
+
+        private MetadataModel GetFakeMetaData(IMapper mapper, ImageCreateDto dto)
+        {
+            ImageModel image = mapper.Map<ImageModel>(dto);
+            image.UserId = 1;
+
+            var fakeImageMetaData = mapper.Map<MetadataModel>(dto);
+            fakeImageMetaData.UserId = 1;
+            fakeImageMetaData.ImageUri = "/2/saa54l.jph";
+
+            return fakeImageMetaData;
+        }
+
+        private string GetTestImageUri()
+        {
+            return "/2/saa54l.jph";
+        }
+
+        private UserModel GetTestUser()
+        {
+            HashSalt hashSalt = PasswordUtil.GenerateSaltedHash("test");
+ 
+            return new UserModel
+            {
+                Id = 1,
+                Username = "test",
+                Hash = hashSalt.Hash,
+                Salt = hashSalt.Salt
+            };
         }
     }
 }

@@ -1,22 +1,20 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using ShopifyBackendChallenge.Core.User;
-using ShopifyBackendChallenge.Data;
-using ShopifyBackendChallenge.Data.Common;
-using ShopifyBackendChallenge.Data.FileStorage;
-using ShopifyBackendChallenge.Data.SqlServer;
+using ShopifyBackendChallenge.Web.Data;
+using ShopifyBackendChallenge.Web.Data.Common;
+using ShopifyBackendChallenge.Web.Data.FileStorage;
+using ShopifyBackendChallenge.Web.Data.SqlServer;
 using Microsoft.EntityFrameworkCore;
 using ShopifyBackendChallenge.Web.Helpers;
-using ShopifyBackendChallenge.Web.Services.common;
+using ShopifyBackendChallenge.Web.Services.Common;
 using ShopifyBackendChallenge.Web.Services.Jwt;
 using System.Reflection;
 using System.IO;
 using System;
+
 
 namespace ShopifyBackendChallenge.Web
 {
@@ -34,6 +32,7 @@ namespace ShopifyBackendChallenge.Web
             services.AddCors();
             services.AddControllers();
 
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddDbContext<RepoDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
             services.AddScoped<IImageMetadata, SqlImageMetadata>();

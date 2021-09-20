@@ -1,15 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using ShopifyBackendChallenge.Core.User;
-using ShopifyBackendChallenge.Data.Common;
+using ShopifyBackendChallenge.Web.Data.Common;
+using ShopifyBackendChallenge.Web.Dtos;
 using ShopifyBackendChallenge.Web.Helpers;
 using ShopifyBackendChallenge.Web.Models;
-using ShopifyBackendChallenge.Web.Services.common;
+using ShopifyBackendChallenge.Web.Services.Common;
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,16 +18,19 @@ namespace ShopifyBackendChallenge.Web.Services.Jwt
     {
         private readonly IUserData _userData;
         private readonly AppSettings _appSettings;
+        private readonly IMapper _mapper;
 
-        public JwtUserAuthentication(IUserData userData, IOptions<AppSettings> appSettings)
+        public JwtUserAuthentication(IUserData userData, IOptions<AppSettings> appSettings, IMapper mapper)
         {
             _userData = userData;
             _appSettings = appSettings.Value;
+            _mapper = mapper;
         }
 
-        public async Task<AuthenticateResponse> Authenticate(AuthenticateRequest model)
+        public async Task<AuthenticateResponse> Authenticate(UserCreateDto model)
         {
-            UserModel user = await _userData.GetUserByUsernameAndPasswordAsync(model.Username, model.Password);
+            UserModel userModel = await _userData.GetUser(model.Password,_mapper.Map<UserModel>(model));
+            UserReadDto user = _mapper.Map<UserReadDto>(userModel);
 
             if (user == null) return null;
 
@@ -42,7 +43,7 @@ namespace ShopifyBackendChallenge.Web.Services.Jwt
             return _userData.GetUserById(id);
         }
 
-        private string GenerateJwtToken(UserModel user)
+        private string GenerateJwtToken(UserReadDto user)
         {
             JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
             byte[] key = Encoding.ASCII.GetBytes(_appSettings.Secret);

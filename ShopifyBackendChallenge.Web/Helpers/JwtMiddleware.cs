@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using ShopifyBackendChallenge.Web.Services.common;
+using ShopifyBackendChallenge.Web.Dtos;
+using ShopifyBackendChallenge.Web.Services.Common;
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Text;
@@ -16,11 +16,13 @@ namespace ShopifyBackendChallenge.Web.Helpers
     {
         private readonly RequestDelegate _next;
         private readonly AppSettings _appSettings;
+        private readonly IMapper _mapper;
 
-        public JwtMiddleware(RequestDelegate next, IOptions<AppSettings> appSettings)
+        public JwtMiddleware(RequestDelegate next, IOptions<AppSettings> appSettings, IMapper mapper)
         {
             _next = next;
             _appSettings = appSettings.Value;
+            _mapper = mapper;
         }
 
         public async Task Invoke(HttpContext context, IUserAuthentication userService)
@@ -52,7 +54,7 @@ namespace ShopifyBackendChallenge.Web.Helpers
 
                 JwtSecurityToken jwtSecurityToken = (JwtSecurityToken)validatedToken;
                 int userId = int.Parse(jwtSecurityToken.Claims.First(x => x.Type == "sub").Value);
-                context.Items["User"] = userService.GetById(userId);
+                context.Items["User"] = _mapper.Map<UserReadDto>(userService.GetById(userId));
             }
             catch
             {
