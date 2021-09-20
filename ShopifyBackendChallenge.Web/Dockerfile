@@ -3,6 +3,7 @@
 FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS base
 WORKDIR /app
 EXPOSE 80
+EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /src
@@ -20,7 +21,7 @@ WORKDIR "/src/ShopifyBackendChallenge.Web"
 RUN dotnet build "ShopifyBackendChallenge.Web.csproj" -c Release -o /app/build
 
 
-
+RUN dotnet dev-certs https --trust
 FROM build AS publish
 RUN dotnet publish "ShopifyBackendChallenge.Web.csproj" -c Release -o /app/publish
 
