@@ -19,6 +19,5 @@ services:
       - shopifyImages:/home/images
     ports:
       - "8080:80"
-      - "8081:443"
 volumes:
   shopifyImages:
