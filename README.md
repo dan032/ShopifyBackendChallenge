@@ -39,7 +39,7 @@ the password they provide is used to generate a new hash which is compared again
 
 # Testing
 
-To run tests you will need to be on a Windows machine and have dotnet core and sql server installed. From the ShopifyBackendChallenge directory run "dotnet test ShopifyBackendChallenge.Tests".
+All tests are run during docker-compose build, so if the tests fail the build will also fail.
 
 # API Details
 
