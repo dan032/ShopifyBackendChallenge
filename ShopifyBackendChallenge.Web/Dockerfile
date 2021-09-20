@@ -8,12 +8,15 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:3.1 AS build
 WORKDIR /src
 COPY ["ShopifyBackendChallenge.Web/ShopifyBackendChallenge.Web.csproj", "ShopifyBackendChallenge.Web/"]
-COPY ["ShopifyBackendChallenge.Data/ShopifyBackendChallenge.Data.csproj", "ShopifyBackendChallenge.Data/"]
-COPY ["ShopifyBackendChallenge.Core/ShopifyBackendChallenge.Core.csproj", "ShopifyBackendChallenge.Core/"]
 RUN dotnet restore "ShopifyBackendChallenge.Web/ShopifyBackendChallenge.Web.csproj"
+
+COPY ["ShopifyBackendChallenge.Web/ShopifyBackendChallenge.Tests.csproj", "ShopifyBackendChallenge.Tests/"]
+RUN dotnet restore "ShopifyBackendChallenge.Web/ShopifyBackendChallenge.Tests.csproj"
 COPY . .
 WORKDIR "/src/ShopifyBackendChallenge.Web"
 RUN dotnet build "ShopifyBackendChallenge.Web.csproj" -c Release -o /app/build
+
+RUN dotnet test tests/ShopifyBackendChallenge.Test/ShopifyBackendChallenge.Test.csproj
 
 FROM build AS publish
 RUN dotnet publish "ShopifyBackendChallenge.Web.csproj" -c Release -o /app/publish

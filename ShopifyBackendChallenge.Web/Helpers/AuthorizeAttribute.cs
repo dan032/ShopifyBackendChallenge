@@ -1,11 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using ShopifyBackendChallenge.Core.User;
+using ShopifyBackendChallenge.Web.Dtos;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ShopifyBackendChallenge.Web.Helpers
 {
@@ -14,7 +11,7 @@ namespace ShopifyBackendChallenge.Web.Helpers
     {
         public void OnAuthorization(AuthorizationFilterContext context)
         {
-            UserModel user = (UserModel)context.HttpContext.Items["User"];
+            UserReadDto user = (UserReadDto)context.HttpContext.Items["User"];
             if (user == null)
             {
                 context.Result = new JsonResult(new { message = "Unauthorized" })

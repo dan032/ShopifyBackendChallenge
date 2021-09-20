@@ -1,11 +1,10 @@
-﻿using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
-using ShopifyBackendChallenge.Core.User;
-using ShopifyBackendChallenge.Data;
-using ShopifyBackendChallenge.Data.Utils;
+﻿using Microsoft.EntityFrameworkCore;
+using ShopifyBackendChallenge.Web.Data;
+using ShopifyBackendChallenge.Web.Models;
+using ShopifyBackendChallenge.Web.Utils;
 using System;
-using System.Collections.Generic;
 using System.Data.Common;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 
@@ -18,7 +17,7 @@ namespace ShopifyBackendChallenge.Tests.Utils
 
         public SharedDatabaseFixture()
         {
-            Connection = new SqlConnection(@"Server=(localdb)\mssqllocaldb;Database=TestRepoDb;Trusted_Connection=True");
+            Connection = new SqlConnection(@"Server=db;Database=TestRepoDb;User=sa;Password=1Secure* Password1;");
             Seed();
             Connection.Open();
         }

@@ -1,13 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using ShopifyBackendChallenge.Core.User;
-using ShopifyBackendChallenge.Data.Common;
-using ShopifyBackendChallenge.Web.Helpers;
+using ShopifyBackendChallenge.Web.Data.Common;
+using ShopifyBackendChallenge.Web.Dtos;
 using ShopifyBackendChallenge.Web.Models;
-using ShopifyBackendChallenge.Web.Services.common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using ShopifyBackendChallenge.Web.Services.Common;
+using ShopifyBackendChallenge.Web.Utils;
 using System.Threading.Tasks;
 
 namespace ShopifyBackendChallenge.Web.Controllers
@@ -16,13 +13,15 @@ namespace ShopifyBackendChallenge.Web.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private IUserAuthentication _userAuthentication;
-        private IUserData _userData;
+        private readonly IUserAuthentication _userAuthentication;
+        private readonly IUserData _userData;
+        private readonly IMapper _mapper;
 
-        public UserController(IUserAuthentication userAuthentication, IUserData userData)
+        public UserController(IUserAuthentication userAuthentication, IUserData userData, IMapper mapper)
         {
             _userAuthentication = userAuthentication;
             _userData = userData;
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -32,7 +31,7 @@ namespace ShopifyBackendChallenge.Web.Controllers
         /// <response code="200">Provides the user with their JWT token</response>
         /// <response code="400">User provided invalid credentials</response>
         [HttpPost("authenticate")]
-        public async Task<IActionResult> Authenticate(AuthenticateRequest model)
+        public async Task<IActionResult> Authenticate(UserCreateDto model)
         {
             if (ModelState.IsValid)
             {
@@ -53,11 +52,15 @@ namespace ShopifyBackendChallenge.Web.Controllers
         /// <param name="model"></param>
         /// <response code="400">User provided invalid credentials</response>
         [HttpPost("register")]
-        public async Task<IActionResult> Register(AuthenticateRequest model)
+        public async Task<IActionResult> Register(UserCreateDto model)
         {
             if (ModelState.IsValid)
             {
-                UserModel user = await _userData.AddUserAsync(model.Username, model.Password);
+                var preUser = _mapper.Map<UserModel>(model);
+                HashSalt hashSalt = PasswordUtil.GenerateSaltedHash(model.Password);
+                preUser.Hash = hashSalt.Hash;
+                preUser.Salt = hashSalt.Salt;
+                UserModel user = await _userData.AddUserAsync(preUser);
                 if (user != null)
                 {
                     await _userData.CommitAsync();

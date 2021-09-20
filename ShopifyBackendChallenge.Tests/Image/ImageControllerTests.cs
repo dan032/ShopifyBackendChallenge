@@ -1,27 +1,18 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using ShopifyBackendChallenge.Core.User;
-using ShopifyBackendChallenge.Data;
-using ShopifyBackendChallenge.Data.Common;
-using ShopifyBackendChallenge.Data.FileStorage;
-using ShopifyBackendChallenge.Data.SqlServer;
-using ShopifyBackendChallenge.Data.Utils;
+using ShopifyBackendChallenge.Web.Data.Common;
+using ShopifyBackendChallenge.Web.Data.FileStorage;
+using ShopifyBackendChallenge.Web.Data.SqlServer;
 using ShopifyBackendChallenge.Tests.Utils;
 using ShopifyBackendChallenge.Web.Controllers;
 using ShopifyBackendChallenge.Web.Helpers;
-using ShopifyBackendChallenge.Web.Models;
-using ShopifyBackendChallenge.Web.Services.common;
-using ShopifyBackendChallenge.Web.Services.Jwt;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
+using AutoMapper;
+using ShopifyBackendChallenge.Web.Profiles;
+using ShopifyBackendChallenge.Web.Dtos;
 
 namespace ShopifyBackendChallenge.Tests.Image
 {
@@ -46,27 +37,34 @@ namespace ShopifyBackendChallenge.Tests.Image
 
                     IImageMetadata imageMetadata = new SqlImageMetadata(context);
                     IImageRepo imageRepo = new FolderStorageImageRepo();
-                    var controller = new ImagesController(imageRepo, imageMetadata);
+                    var mockMapper = new MapperConfiguration(cfg =>
+                    {
+                        cfg.AddProfile(new ImagesProfile());
+                        cfg.AddProfile(new MetadataProfile());
+                        cfg.AddProfile(new UsersProfile());
+                    });
+                    IMapper mapper = mockMapper.CreateMapper();
+                    var controller = new ImagesController(imageRepo, imageMetadata, mapper);
 
                     var image = File.OpenRead(@"..\..\..\TestImages\test.jpg");
 
                     var formData = new FormFile(image, 0, 0, "test", "test.jpg");
 
 
-                    SingleImageModel singleImageModel = new SingleImageModel
+                    ImageCreateDto singleImageModel = new ImageCreateDto
                     {
-                        Image = formData,
+                        ImageData = formData,
                         Description = "Test",
                         Title = "Test",
-                        Tags = new List<string>() { "Dan"}
+                        Tags = new List<string>() { "Dan" },
+                        Private = false
                     };
+
                     controller.ControllerContext.HttpContext = new DefaultHttpContext();
-                    controller.HttpContext.Items["User"] = new UserModel
+                    controller.HttpContext.Items["User"] = new UserCreateDto
                     {
-                        Id = 1,
                         Username = "test",
-                        Hash = "hash",
-                        Salt = "salt"
+                        Password = "test"
                     };
 
                     IActionResult actionResult = await controller.PostImage(singleImageModel);

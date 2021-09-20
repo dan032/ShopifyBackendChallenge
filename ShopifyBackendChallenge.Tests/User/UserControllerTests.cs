@@ -1,23 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using Moq;
-using ShopifyBackendChallenge.Core.User;
-using ShopifyBackendChallenge.Data;
-using ShopifyBackendChallenge.Data.Common;
-using ShopifyBackendChallenge.Data.SqlServer;
-using ShopifyBackendChallenge.Data.Utils;
+using ShopifyBackendChallenge.Web.Data.Common;
+using ShopifyBackendChallenge.Web.Data.SqlServer;
 using ShopifyBackendChallenge.Tests.Utils;
 using ShopifyBackendChallenge.Web.Controllers;
+using ShopifyBackendChallenge.Web.Dtos;
 using ShopifyBackendChallenge.Web.Helpers;
-using ShopifyBackendChallenge.Web.Models;
-using ShopifyBackendChallenge.Web.Services.common;
+using ShopifyBackendChallenge.Web.Profiles;
+using ShopifyBackendChallenge.Web.Services.Common;
 using ShopifyBackendChallenge.Web.Services.Jwt;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Xunit;
 
 namespace ShopifyBackendChallenge.Tests.User
@@ -41,9 +33,17 @@ namespace ShopifyBackendChallenge.Tests.User
                         Secret = "Daasdfsadadssadadsasddasasfdffsadn"
                     });
 
-                    IUserAuthentication userAuthentication = new JwtUserAuthentication(userData, appSettings);
-                    var controller = new UserController(userAuthentication, userData);
-                    AuthenticateRequest authenticateRequest = new AuthenticateRequest
+                    var mockMapper = new MapperConfiguration(cfg =>
+                    {
+                        cfg.AddProfile(new ImagesProfile());
+                        cfg.AddProfile(new MetadataProfile());
+                        cfg.AddProfile(new UsersProfile());
+                    });
+                    IMapper mapper = mockMapper.CreateMapper();
+
+                    IUserAuthentication userAuthentication = new JwtUserAuthentication(userData, appSettings, mapper);
+                    var controller = new UserController(userAuthentication, userData, mapper);
+                    UserCreateDto authenticateRequest = new UserCreateDto
                     {
                         Username = "test2",
                         Password = "test2"
@@ -70,9 +70,17 @@ namespace ShopifyBackendChallenge.Tests.User
                         Secret = "Daasdfsadadssadadsasddasasfdffsadn"
                     });
 
-                    IUserAuthentication userAuthentication = new JwtUserAuthentication(userData, appSettings);
-                    var controller = new UserController(userAuthentication, userData);
-                    AuthenticateRequest authenticateRequest = new AuthenticateRequest
+                    var mockMapper = new MapperConfiguration(cfg =>
+                    {
+                        cfg.AddProfile(new ImagesProfile());
+                        cfg.AddProfile(new MetadataProfile());
+                        cfg.AddProfile(new UsersProfile());
+                    });
+                    IMapper mapper = mockMapper.CreateMapper();
+
+                    IUserAuthentication userAuthentication = new JwtUserAuthentication(userData, appSettings, mapper);
+                    var controller = new UserController(userAuthentication, userData, mapper);
+                    UserCreateDto authenticateRequest = new UserCreateDto
                     {
                         Username = "test2",
                         Password = "test2"
@@ -100,9 +108,17 @@ namespace ShopifyBackendChallenge.Tests.User
                         Secret = "Daasdfsadadssadadsasddasasfdffsadn"
                     });
 
-                    IUserAuthentication userAuthentication = new JwtUserAuthentication(userData, appSettings);
-                    var controller = new UserController(userAuthentication, userData);
-                    AuthenticateRequest authenticateRequest = new AuthenticateRequest
+                    var mockMapper = new MapperConfiguration(cfg =>
+                    {
+                        cfg.AddProfile(new ImagesProfile());
+                        cfg.AddProfile(new MetadataProfile());
+                        cfg.AddProfile(new UsersProfile());
+                    });
+                    IMapper mapper = mockMapper.CreateMapper();
+
+                    IUserAuthentication userAuthentication = new JwtUserAuthentication(userData, appSettings, mapper);
+                    var controller = new UserController(userAuthentication, userData, mapper);
+                    UserCreateDto authenticateRequest = new UserCreateDto
                     {
                         Username = "test",
                         Password = "test"
@@ -128,9 +144,18 @@ namespace ShopifyBackendChallenge.Tests.User
                         Secret = "Daasdfsadadssadadsasddasasfdffsadn"
                     });
 
-                    IUserAuthentication userAuthentication = new JwtUserAuthentication(userData, appSettings);
-                    var controller = new UserController(userAuthentication, userData);
-                    AuthenticateRequest authenticateRequest = new AuthenticateRequest
+
+                    var mockMapper = new MapperConfiguration(cfg =>
+                    {
+                        cfg.AddProfile(new ImagesProfile());
+                        cfg.AddProfile(new MetadataProfile());
+                        cfg.AddProfile(new UsersProfile());
+                    });
+                    IMapper mapper = mockMapper.CreateMapper();
+
+                    IUserAuthentication userAuthentication = new JwtUserAuthentication(userData, appSettings, mapper);
+                    var controller = new UserController(userAuthentication, userData, mapper);
+                    UserCreateDto authenticateRequest = new UserCreateDto
                     {
                         Username = "test",
                         Password = "wrong"

@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ShopifyBackendChallenge.Core.Image;
-using ShopifyBackendChallenge.Core.User;
-using ShopifyBackendChallenge.Data.Common;
-using ShopifyBackendChallenge.Web.Helpers;
 using ShopifyBackendChallenge.Web.Models;
+using ShopifyBackendChallenge.Web.Data.Common;
+using ShopifyBackendChallenge.Web.Dtos;
+using ShopifyBackendChallenge.Web.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 
 namespace ShopifyBackendChallenge.Web.Controllers
 {
@@ -17,11 +17,13 @@ namespace ShopifyBackendChallenge.Web.Controllers
     {
         private readonly IImageRepo _imageRepo;
         private readonly IImageMetadata _imageMetadata;
+        private readonly IMapper _mapper;
 
-        public ImagesController(IImageRepo imageRepo, IImageMetadata imageMetadata)
+        public ImagesController(IImageRepo imageRepo, IImageMetadata imageMetadata, IMapper mapper)
         {
             _imageRepo = imageRepo;
             _imageMetadata = imageMetadata;
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -31,22 +33,18 @@ namespace ShopifyBackendChallenge.Web.Controllers
         /// <response code="401">User did not provide a valid JWT token</response>
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> PostImage([FromForm] SingleImageModel model)
+        public async Task<IActionResult> PostImage([FromForm] ImageCreateDto dto)
         {
             if (ModelState.IsValid)
             {
-                int userId = ((UserModel)HttpContext.Items["User"]).Id;
-                string imagePath = await _imageRepo.AddImageAsync(model.Image, userId);
-                ImageModel imageMetadata = new ImageModel
-                {
-                    Title = model.Title,
-                    Description = model.Description,
-                    ImageUri = imagePath,
-                    UserId = userId,
-                    Tags = String.Join(",", model.Tags)
-                };
+                dto.UserId = ((UserReadDto)HttpContext.Items["User"]).Id;
+                ImageModel imageModel = _mapper.Map<ImageModel>(dto);
+                string imagePath = await _imageRepo.AddImageAsync(imageModel);
 
-                await _imageMetadata.AddImageMetadataAsync(imageMetadata);
+                var metadataModel = _mapper.Map<MetadataModel>(dto);
+                metadataModel.ImageUri = imagePath;
+
+                await _imageMetadata.AddImageMetadataAsync(metadataModel);
                 await _imageMetadata.CommitAsync();
                 return Ok(new { message = "Image Added Successfully" });
             }
@@ -61,13 +59,14 @@ namespace ShopifyBackendChallenge.Web.Controllers
         [HttpGet("personal-metadata")]
         public async Task<IActionResult> GetAllUserImageMetadata()
         {
-            int userId = ((UserModel)HttpContext.Items["User"]).Id;
+            int userId = ((UserReadDto)HttpContext.Items["User"]).Id;
             var metadata = await _imageMetadata.GetImagesMetadataByUserIdAsync(userId);
-            return Ok(new {result = metadata });
+
+            return Ok(new {result = _mapper.Map<IEnumerable<ImageReadDto>>(metadata) });
         }
 
         /// <summary>
-        /// Retrieves all image metadata for the user
+        /// Retrieves all public image metadata for the user by Tag
         /// </summary>
         /// <response code="401">User did not provide a valid JWT token</response>
         [Authorize]
@@ -75,22 +74,24 @@ namespace ShopifyBackendChallenge.Web.Controllers
         [Route("search-global-metadata")]
         public async Task<IActionResult> GetAllUserImageMetadataContainingTag([FromQuery] string tag)
         {
-            int userId = ((UserModel)HttpContext.Items["User"]).Id;
+            int userId = ((UserReadDto)HttpContext.Items["User"]).Id;
             var metadata = await _imageMetadata.GetImageMetadataByTagsAsync(tag, userId);
-            return Ok(new { result = metadata });
+            return Ok(new { result = _mapper.Map<IEnumerable<ImageReadDto>>(metadata) });
         }
 
         /// <summary>
-        /// Retrieves all images for the user
+        /// Retrieves all personal images for the user
         /// </summary>
         /// <response code="401">User did not provide a valid JWT token</response>
         [Authorize]
         [HttpGet]
-        public IActionResult GetAllUserImages()
+        public async Task<IActionResult> GetAllUserImages()
         {
-            int userId = ((UserModel)HttpContext.Items["User"]).Id;
-            var images = _imageRepo.GetImagesByUserIdAsync(userId);
-            return Ok(new { result = images });
+            int userId = ((UserReadDto)HttpContext.Items["User"]).Id;
+            var metadata = await _imageMetadata.GetImagesMetadataByUserIdAsync(userId);
+            var images = _imageRepo.GetImagesFromMetadataAsync(userId, metadata);
+           
+            return Ok(new { result = images});
         }
     }
 }
