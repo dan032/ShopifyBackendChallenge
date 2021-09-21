@@ -52,7 +52,7 @@ All tests are run during docker-compose build, so if the tests fail the build wi
 
 All API details can be found on http://localhost:8080/index.html as the application is documented with SwaggerUI.
 
-You can also watch this video for a quick demonstration for using the API with Postman - https://youtu.be/3xI3L0l4RD8
+You can also watch this video for a quick demonstration for using the API with Postman - https://youtu.be/FuduoGazBzw
 
 ![Alt text](https://imgur.com/FVXDw70.png)
 
