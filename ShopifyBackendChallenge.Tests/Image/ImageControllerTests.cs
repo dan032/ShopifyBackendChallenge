@@ -22,7 +22,7 @@ namespace ShopifyBackendChallenge.Tests.Image
     public class ImageControllerTests
     {
         [Fact]
-        public async void ImageController_UploadImage_Successful()
+        public async void ImageController_PostImage_Successful()
         {
             var appSettings = Options.Create(new AppSettings
             {
@@ -89,7 +89,6 @@ namespace ShopifyBackendChallenge.Tests.Image
             IActionResult actionResult = await controller.PostImage(dto);
             var okResult = actionResult as OkObjectResult;
             Assert.Equal(200, okResult.StatusCode);
-
         }
 
         private MetadataModel GetFakeMetaData(IMapper mapper, ImageCreateDto dto)

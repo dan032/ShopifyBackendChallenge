@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using ShopifyBackendChallenge.Web.Helpers;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -8,6 +9,7 @@ namespace ShopifyBackendChallenge.Web.Dtos
     public class ImageCreateDto
     {
         [Required]
+        [AllowedExtensions(new string[] { ".jpg", ".png"})]
         public IFormFile ImageData { get; set; }
 
         [Required]
@@ -19,6 +21,7 @@ namespace ShopifyBackendChallenge.Web.Dtos
         public string Description { get; set; }
 
         [Required]
+        [MinLength(1)]
         public IEnumerable<string> Tags { get; set; }
 
         [Required]
