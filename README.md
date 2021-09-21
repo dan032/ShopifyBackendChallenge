@@ -32,7 +32,7 @@ the password they provide is used to generate a new hash which is compared again
 
 # How to use
 
-1) Use the base URL: https://localhost:8081/
+1) Use the base URL: http://localhost:8080/
 2) Following the API below you can register a new user. There is a test user ready for use however (username: "test", password: "test") if you wished to skip this step.
 3) You will then need authenticate in order to receive your JWT so you can access be authorized to use the other routes for the API. 
 4) Using your JWT, you can then add images, request your metadata and images, and search for any public images through the use of a tag.
@@ -43,7 +43,7 @@ All tests are run during docker-compose build, so if the tests fail the build wi
 
 # API Details
 
-All API details can be found on https://localhost:8081/index.html as the application is documented with SwaggerUI.
+All API details can be found on http://localhost:8080/index.html as the application is documented with SwaggerUI.
 
 You can also watch this video for a quick demonstration for using the API with Postman - https://youtu.be/3xI3L0l4RD8
 
