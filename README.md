@@ -30,12 +30,7 @@ the password they provide is used to generate a new hash which is compared again
 # Getting Started
 
 1) Ensure that you have Docker and Docker Compose are installed, and that you are using Linux containers
-2) <b>For MacOS only:</b> Add /Microsoft/UserSecrets and /ASP.NET/Https under File Sharing
-
-![Alt text](https://imgur.com/FVXDw70.png)
-
-
-3) From the ShopifyBackendChallenge directory run "docker-compose build", and then "docker-compose up". This will ensure that the web server, database and docker volume are set up and ready to use.
+2) From the ShopifyBackendChallenge directory run "docker-compose build", and then "docker-compose up". This will ensure that the web server, database and docker volume are set up and ready to use.
 
 # How to use
 
