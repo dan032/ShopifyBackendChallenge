@@ -67,4 +67,4 @@ be sending all of those images with a single request. Instead, I could send a ha
 
 3) Currently search is very fragile as it relies on the tags specified by the user. Another way to search for images would be to use a service that classified these images using machine learning, and then using those classifications to generate our own tags in case the ones provided by the user are not particularly useful. Another method could be to use image hashingto try and determine which images appear to be visually similiar. 
 
-4) I want to learn more about services such as AWS or Azure, so if I have time I might try and host it on one of those services.
+4) I want to learn more about working in environments like AWS or Azure, so if I have time I might try and host it on one of those services.
