@@ -54,7 +54,7 @@ All API details can be found on http://localhost:8080/index.html as the applicat
 
 You can also watch this video for a quick demonstration for using the API with Postman - https://youtu.be/FuduoGazBzw
 
-![Alt text](https://imgur.com/FVXDw70.png)
+![Alt text](https://imgur.com/NoYX2T5.png)
 
 # Future Work
 
