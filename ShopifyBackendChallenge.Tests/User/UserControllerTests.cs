@@ -68,7 +68,7 @@ namespace ShopifyBackendChallenge.Tests.User
             });
 
             var mockUserData = new Mock<IUserData>();
-            mockUserData.Setup(r => r.AddUserAsync(It.IsAny<UserModel>())).ReturnsAsync(GetTestUser());
+            mockUserData.Setup(r => r.AddUserAsync(It.IsAny<UserModel>())).ReturnsAsync(GetInvalidTestUser());
 
             var mockMapper = new MapperConfiguration(cfg =>
             {
@@ -90,9 +90,9 @@ namespace ShopifyBackendChallenge.Tests.User
             };
 
             var actionResult = await controller.Register(authenticateRequest);
-            var okResult = actionResult as OkObjectResult;
+            var result = actionResult as BadRequestObjectResult;
 
-            Assert.Equal(200, okResult.StatusCode);
+            Assert.Equal(400, result.StatusCode);
         }
 
         [Fact]
@@ -133,7 +133,6 @@ namespace ShopifyBackendChallenge.Tests.User
                 
         }
 
-      
         [Fact]
         public async void UserController_AuthenticationIncorrectCredentials_Failure()
         {
