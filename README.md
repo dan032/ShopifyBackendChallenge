@@ -10,6 +10,10 @@ Here is a basic deployment of my project:
 
 ![Alt text](https://imgur.com/unMqqvl.png)
 
+Here is a UML diagram for the classes within my project:
+
+![Alt_test](![image](https://user-images.githubusercontent.com/49849803/137232382-701d3c92-cae1-4be2-adfa-07db7b3ac9c2.png)
+
 To create the Web API itself I used ASP.NET 5.0, and used the Entity Framework to serve as an ORM to simplify the process of dealing with the SQL database, where I stored 
 the image metadata. I then used a Docker Volume's filesystem in order to store the actual images. When accessing an image, I access the Metadata first, which contains the image's uri on the file system, which will then be used to access the image.
 
